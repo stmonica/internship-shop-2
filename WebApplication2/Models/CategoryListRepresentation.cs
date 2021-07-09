@@ -9,7 +9,7 @@ namespace WebApplication2.Models
     {
         public CategoryListRepresentation(List<Category> categories)
         {
-            this.Categories = categories.Select(x => new CategoryRepresentation(x.CategoryID, x.Name)).ToList();
+            this.Categories = categories.Select(x => new CategoryRepresentation(x.CategoryID, x.Name, x.Description)).ToList();
         }
 
         [JsonProperty(PropertyName = "categories")]

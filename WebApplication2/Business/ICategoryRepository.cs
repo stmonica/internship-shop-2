@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using WebApplication2.Domain;
 
 namespace WebApplication2.Business
@@ -8,8 +10,8 @@ namespace WebApplication2.Business
         List<Category> GetAll();
         Category Insert(Category category);
         Category Delete(int id);
-        Category GetById(int id);
-        Category Update(Category category);
+        Task<Category> GetById(int id);
+        Task<Category> Update(Category category);
         
     }
 }

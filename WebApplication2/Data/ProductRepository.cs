@@ -54,7 +54,7 @@ namespace WebApplication2.Data
         public Product Update(Product product)
         {
             _context.Entry(product).State = EntityState.Modified;
-            _context.SaveChanges();
+            _context.SaveChangesAsync();
             return product;
         }
     }

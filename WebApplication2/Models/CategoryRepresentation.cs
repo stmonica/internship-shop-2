@@ -4,10 +4,16 @@ namespace WebApplication2.Models
 {
     public class CategoryRepresentation
     {
-        public CategoryRepresentation(int categoryID, string name)
+        public CategoryRepresentation()
+        {
+
+        }
+        public CategoryRepresentation(int categoryID, string name, string description)
         {
             this.CategoryID = categoryID;
             this.Name = name;
+            this.Description = description;
+            
         }
 
         [JsonProperty(PropertyName = "categoryId")]
@@ -15,5 +21,8 @@ namespace WebApplication2.Models
 
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
+
+        [JsonProperty(PropertyName = "description")]
+        public string Description { get; set; }
     }
 }

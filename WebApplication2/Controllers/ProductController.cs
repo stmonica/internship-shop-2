@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 using WebApplication2.Business;
@@ -29,7 +30,7 @@ namespace WebApplication2.Controllers
 
         // GET: api/[controller]/5
         [HttpGet("{id}")]
-        public ProductRepresentation GetById(int id, string name, string description, decimal price, decimal basePrice, int categoryId, string filename)
+        public ProductRepresentation GetById(int id, Product product)
         {
             var dbProducts = _repo.GetById(id);
 
@@ -38,16 +39,16 @@ namespace WebApplication2.Controllers
         }
 
         // PUT: api/[controller]/5
-        [HttpPut("{id}")]
-        public ProductRepresentation Put(Product product)
+        [HttpPut("{productID:int}")]
+        public ProductRepresentation Put( Product product)
         {
             var dbProducts = _repo.Update(product);
 
             return new ProductRepresentation(dbProducts.ProductID, dbProducts.Name, dbProducts.Description, dbProducts.Price, dbProducts.BasePrice, dbProducts.CategoryID, dbProducts.FileName);
-
-
         }
 
+
+        
         // POST: api/[controller]
         [HttpPost]
         public ProductRepresentation Post(Product product)
@@ -67,6 +68,6 @@ namespace WebApplication2.Controllers
 
         }
 
-
+      
     }
 }

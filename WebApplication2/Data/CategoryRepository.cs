@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,9 +21,11 @@ namespace WebApplication2.Data
         {
             return _context.Categories.ToList();
         }
-        public Category GetById(int id)
+        public async Task<Category> GetById(int id)
         {
-            return  _context.Categories.Find(id);
+            return  await  _context.Categories
+                .FirstOrDefaultAsync(e =>e.CategoryID == id);
+
         }
 
 
@@ -51,11 +54,21 @@ namespace WebApplication2.Data
         }
       
 
-        public Category Update(Category category)
+        public async Task<Category> Update( Category category)
         {
-            _context.Entry(category).State = EntityState.Modified;
-            _context.SaveChanges();
-            return category;
+            var result = await _context.Categories
+                 .FirstOrDefaultAsync(e => e.CategoryID == category.CategoryID);
+
+            if (result != null)
+            {
+                result.Name = category.Name;
+                result.Description = category.Description;
+
+                await _context.SaveChangesAsync();
+
+                return result;
+            }
+            return null;
         }
     }
 }

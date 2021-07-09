@@ -12,7 +12,7 @@ namespace WebApplication2.Business
         Product Insert(Product product);
         Product Delete(int id);
         Product GetById(int id);
-        Product Update(Product product);
+        Product Update( Product product);
 
     }
 }

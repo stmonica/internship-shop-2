@@ -20,41 +20,87 @@ namespace WebApplication2.Controllers
             _repo = repo;
         }
         [HttpGet]
-        public CategoryListRepresentation GetAll()
+        public async Task<ActionResult<CategoryListRepresentation>> GetAll()
         {
-            var dbCategories = _repo.GetAll();
+            try
+            {
+                var dbCategories = _repo.GetAll();
 
-            return new CategoryListRepresentation(dbCategories);
+                return new CategoryListRepresentation(dbCategories);
+            }
+
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error updating data");
+            }
+           
         }
 
         // GET: api/[controller]/5
         [HttpGet("{id}")]
-        public CategoryRepresentation GetById(int id)
+        public async Task<ActionResult<CategoryRepresentation>> GetById(int id)
         {
-            var dbCategories = _repo.GetById(id);
+            
+            try
+            {
 
-            return new CategoryRepresentation(dbCategories.CategoryID, dbCategories.Name);
+                var dbCategories = await _repo.GetById(id);
+                if (dbCategories == null)
+                {
+                  
+                    return NotFound($"Category with ID = {id} not found");
+                }
+
+                return new CategoryRepresentation(dbCategories.CategoryID, dbCategories.Name, dbCategories.Description);
+
+
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error updating data");
+            }
 
         }
 
         // PUT: api/[controller]/5
-        [HttpPut]
-        public CategoryRepresentation Put(Category category)
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult<CategoryRepresentation>> Put(int id, Category category)
         {
-            var dbCategories = _repo.Update(category);
+           
+            try
+            {
+                if (id != category.CategoryID)
+                {
+                    return BadRequest("Category ID mismatch");
+                }
 
-            return new CategoryRepresentation(dbCategories.CategoryID, dbCategories.Name);
+                var categoryToUpdate = await _repo.GetById(id);
+                if (categoryToUpdate == null)
+                {
+                    return NotFound($"Category with ID = {id} not found");
+                }
+                    var dbCategories = await _repo.Update(category);
 
+                    return new CategoryRepresentation(dbCategories.CategoryID, dbCategories.Name, dbCategories.Description);
+
+                
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error updating data");
+            }
 
         }
+    
 
         // POST: api/[controller]
         [HttpPost]
-        public CategoryRepresentation Post(Category category)
-        {
-            var dbCategories = _repo.Insert(category);
+        public CategoryRepresentation Post(CategoryRepresentation category)
+       {
+            var catToInsert = new Category() { Description = category.Description, Name = category.Name };
+            var dbCategories = _repo.Insert(catToInsert);
 
-            return new CategoryRepresentation(dbCategories.CategoryID, dbCategories.Name);
+            return new CategoryRepresentation(dbCategories.CategoryID, dbCategories.Name, dbCategories.Description);
         }
 
         // DELETE: api/[controller]/5
